@@ -3,6 +3,11 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+st.set_page_config(
+    page_title="Credit Data Dashboard",
+    page_icon="🏦",
+)
+
 df = pd.read_csv('credit_data.csv')
 
 st.title('Credit Data Analysis')

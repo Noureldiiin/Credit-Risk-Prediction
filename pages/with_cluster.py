@@ -1,6 +1,9 @@
 import streamlit as st
 import pandas as pd
 import seaborn as sns
+import plotly.subplots as sp
+import plotly.express as px
+import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 
 df = pd.read_csv('credit_data.csv')
@@ -13,15 +16,17 @@ st.title("With Clusters")
 
 st.title("Cluster Statistics Summary")
 
-# Create and display the plots
-st.subheader('Checking Account Status Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+# Create and display the plots for Checking Account Status Distribution
+fig = sp.make_subplots(rows=1, cols=3, subplot_titles=("Cluster 0", "Cluster 1", "Cluster 2"))
+
 for cluster in df['Cluster'].unique():
-    ax = axes[cluster]
     subset = df[df['Cluster'] == cluster]
-    subset['checking_status'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
+    data = subset['checking_status'].value_counts().reset_index()
+    fig.add_trace(go.Bar(x=data['index'], y=data['checking_status'], name=f'Cluster {cluster}'), row=1, col=cluster)
+
+fig.update_layout(title_text='Checking Account Status Distribution by Cluster')
+fig.update_xaxes(title_text='Checking Status')
+fig.update_yaxes(title_text='Count')
 
 # Sample data for Cluster 0, 1, and 2
 cluster0 = df[df['Cluster'] == 0].sample(n=100, replace=True)
@@ -38,22 +43,23 @@ Cluster 1: Within Cluster 1, you also have the same 4 categories of 'checking_st
 Cluster 2: Cluster 2 follows a similar pattern with the same 4 'checking_status' categories and counts of 18, 17, 7, and 58.
 """
 
-# Streamlit app
+# Streamlit app for Checking Account Status
 st.write(display_string)
+st.plotly_chart(fig)
 
-# Display Employment Distribution
-st.subheader('Employment Duration Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
+# Display Employment Duration Distribution
+fig = sp.make_subplots(rows=1, cols=3, subplot_titles=("Cluster 0", "Cluster 1", "Cluster 2"))
+
 for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
     subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['employment'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
+    data = subset['employment'].value_counts().reset_index()
+    fig.add_trace(go.Bar(x=data['index'], y=data['employment'], name=f'Cluster {cluster}'), row=1, col=cluster)
 
-st.subheader("Employment Details")
+fig.update_layout(title_text='Employment Duration Distribution by Cluster')
+fig.update_xaxes(title_text='Employment Duration')
+fig.update_yaxes(title_text='Count')
 
-# Display the explanation
+# Display the explanation for Employment Duration
 st.write("""
 Cluster 0: This cluster has five 'employment' status categories: '1<=X<4,' '4<=X<7,' '<1,' '>=7,' and 'unemployed.' The counts for each category within this cluster are 33, 14, 26, 22, and 5, respectively.
 
@@ -61,20 +67,20 @@ Cluster 1: Cluster 1 also contains the same five 'employment' status categories,
 
 Cluster 2: Cluster 2 follows a similar pattern with the same five 'employment' status categories and counts of 29, 15, 10, 38, and 8.
 """)
+st.plotly_chart(fig)
 
+# Credit Duration Distribution
+fig = sp.make_subplots(rows=1, cols=3, subplot_titles=("Cluster 0", "Cluster 1", "Cluster 2"))
 
-# Display Duration Distribution
-st.subheader('Credit Duration Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
 for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
     subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['duration'].plot(kind='hist', bins=20, ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
+    fig.add_trace(go.Histogram(x=subset['duration'], nbinsx=20, name=f'Cluster {cluster}'), row=1, col=cluster)
 
+fig.update_layout(title_text='Credit Duration Distribution by Cluster')
+fig.update_xaxes(title_text='Credit Duration')
+fig.update_yaxes(title_text='Count')
 
-
+st.plotly_chart(fig)
 
 st.write("""
 **Cluster 0:**
@@ -86,7 +92,6 @@ The middle value of the data is 18.0.
 About 75% of the data falls below 24.0.
 The largest value in this cluster is 48.0.
 
-
 **Cluster 1:**
 The average value in this cluster is approximately 36.15.
 The data points have a spread of around 13.38.
@@ -96,7 +101,6 @@ The middle value of the data is 36.0.
 About 75% of the data falls below 48.0.
 The largest value in this cluster is 60.0.
 
-
 **Cluster 2:**
 The average value in this cluster is approximately 15.14.
 The data points have a spread of around 6.96.
@@ -105,21 +109,21 @@ About 25% of the data falls below 11.0.
 The middle value of the data is 12.0.
 About 75% of the data falls below 21.0.
 The largest value in this cluster is 36.0.
-
 """)
 
-
 # Credit History Distribution
-st.subheader('Credit History Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['credit_history'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
+fig = sp.make_subplots(rows=1, cols=3, subplot_titles=("Cluster 0", "Cluster 1", "Cluster 2"))
 
-st.subheader("Credit History by Cluster - Detailed Explanation")
+for cluster in merged_df['Cluster'].unique():
+    subset = merged_df[merged_df['Cluster'] == cluster]
+    data = subset['credit_history'].value_counts().reset_index()
+    fig.add_trace(go.Bar(x=data['index'], y=data['credit_history'], name=f'Cluster {cluster}'), row=1, col=cluster)
+
+fig.update_layout(title_text='Credit History Distribution by Cluster')
+fig.update_xaxes(title_text='Credit History')
+fig.update_yaxes(title_text='Count')
+
+st.plotly_chart(fig)
 
 st.write("""
 In this analysis, we have explored the distribution of 'credit_history' within three distinct clusters. Let's break down what each cluster's 'credit_history' distribution means:
@@ -144,493 +148,215 @@ In this analysis, we have explored the distribution of 'credit_history' within t
 - **'delayed previously'**: There are 9 cases in Cluster 2 with a history of 'delayed previously.'
 - **'existing paid'**: 16 cases in Cluster 2 have an 'existing paid' credit history, suggesting successful credit repayment.
 - **'no credits/all paid'**: There are 3 instances in Cluster 2 where applicants either have no prior credit history or have a history of 'all paid.'
-
 """)
 
+# Purpose Distribution by Cluster
+fig = px.bar(merged_df, x='Cluster', color='purpose', barmode='group',
+             title='Purpose Distribution by Cluster')
+fig.update_layout(xaxis_title="Cluster", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Purpose Distribution
-st.subheader('Purpose Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['purpose'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
+# Purpose of Credit by Cluster
 st.subheader("Purpose of Credit by Cluster")
-
 st.write("""
-In this analysis, we have explored the distribution of credit purposes within three distinct clusters. The following summary provides insight into the distribution of 'purpose' categories for each cluster:
-
-**Cluster 0**:
-- **Business**: 2 cases in Cluster 0 indicate that applicants in this group are seeking credit for business-related purposes.
-- **Domestic Appliance**: There are 2 instances where applicants are seeking credit for domestic appliance-related purchases.
-- **Education**: 6 cases in Cluster 0 reflect credit requests for educational expenses.
-- **Furniture/Equipment**: The majority of applicants in Cluster 0 (32 cases) are looking for credit to finance furniture or equipment purchases.
-- **New Car**: 17 cases suggest that applicants in this cluster aim to finance a new car.
-- **Radio/TV**: Radio or TV purchases are represented by 34 cases.
-- **Repairs**: There is 1 case where applicants are seeking credit for repairs.
-- **Used Car**: 6 cases indicate a desire to purchase a used car.
-
-**Cluster 1**:
-- **Business**: 19 cases in Cluster 1 suggest that applicants in this group are seeking credit for business-related purposes.
-- **Domestic Appliance**: There is 1 instance where applicants are seeking credit for domestic appliance-related purchases.
-- **Education**: 7 cases in Cluster 1 reflect credit requests for educational expenses.
-- **Furniture/Equipment**: 10 cases in this cluster are related to financing furniture or equipment purchases.
-- **New Car**: 24 cases indicate a desire to finance a new car.
-- **Other**: 3 cases represent other unspecified credit purposes.
-- **Radio/TV**: 14 cases reflect credit requests for radio or TV purchases.
-- **Used Car**: 22 cases indicate a desire to purchase a used car.
-
-**Cluster 2**:
-- **Business**: Cluster 2 has 9 cases representing applicants seeking credit for business-related purposes.
-- **Domestic Appliance**: There is 1 instance where applicants are seeking credit for domestic appliance-related purchases.
-- **Education**: 5 cases in Cluster 2 reflect credit requests for educational expenses.
-- **Furniture/Equipment**: 17 cases are related to financing furniture or equipment purchases.
-- **New Car**: 30 cases suggest a desire to finance a new car.
-- **Radio/TV**: 30 cases indicate credit requests for radio or TV purchases.
-- **Repairs**: 4 cases represent credit requests for repairs.
-- **Retraining**: There is 1 case indicating credit requests for retraining.
-- **Used Car**: 3 cases reflect a desire to purchase a used car.
-
+In this analysis, we have explored the distribution of credit purposes within three distinct clusters. 
+The following summary provides insight into the distribution of 'purpose' categories for each cluster:
 """)
 
+# Credit Amount Distribution by Cluster
+fig = px.histogram(merged_df, x='credit_amount', color='Cluster', nbins=20,
+                   title='Credit Amount Distribution by Cluster')
+fig.update_layout(xaxis_title="Credit Amount", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Credit Amount Distribution
-st.subheader('Credit Amount Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['credit_amount'].plot(kind='hist', bins=20, ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
+# Conclusion: Cluster Statistics Summary for Credit Amount
 st.subheader("Conclusion: Cluster Statistics Summary")
-
 st.write("""
-In our analysis of three clusters, we've examined important characteristics for each cluster:
+In our analysis of three clusters, we've examined key characteristics related to credit amount:
 
 **Cluster 0**:
-- **Minimum**: The lowest value within this cluster is 426.0.
-- **25th Percentile**: 25% of the data falls below 1,489.0.
-- **Median (50th Percentile)**: The middle value of the data is 2,321.0.
-- **75th Percentile**: 75% of the data falls below 3,238.5.
-- **Maximum**: The highest value in this cluster is 6,350.0.
+- Minimum: The lowest value within this cluster is 426.0.
+- 25th Percentile: 25% of the data falls below 1,489.0.
+- Median (50th Percentile): The middle value of the data is 2,321.0.
+- 75th Percentile: 75% of the data falls below 3,238.5.
+- Maximum: The highest value in this cluster is 6,350.0.
 
 **Cluster 1**:
-- **Minimum**: The lowest value within this cluster is 3,535.0.
-- **25th Percentile**: 25% of the data falls below 5,907.25.
-- **Median (50th Percentile)**: The middle value of the data is 7,474.0.
-- **75th Percentile**: 75% of the data falls below 10,240.75.
-- **Maximum**: The highest value in this cluster is 18,424.0.
+- Minimum: The lowest value within this cluster is 3,535.0.
+- 25th Percentile: 25% of the data falls below 5,907.25.
+- Median (50th Percentile): The middle value of the data is 7,474.0.
+- 75th Percentile: 75% of the data falls below 10,240.75.
+- Maximum: The highest value in this cluster is 18,424.0.
 
 **Cluster 2**:
-- **Minimum**: The lowest value within this cluster is 250.0.
-- **25th Percentile**: 25% of the data falls below 1,261.75.
-- **Median (50th Percentile)**: The middle value of the data is 1,568.5.
-- **75th Percentile**: 75% of the data falls below 2,336.5.
-- **Maximum**: The highest value in this cluster is 4,591.0.
-
+- Minimum: The lowest value within this cluster is 250.0.
+- 25th Percentile: 25% of the data falls below 1,261.75.
+- Median (50th Percentile): The middle value of the data is 1,568.5.
+- 75th Percentile: 75% of the data falls below 2,336.5.
+- Maximum: The highest value in this cluster is 4,591.0.
 """)
-
 
 # ECDF of Credit Amount by Cluster
 st.subheader('ECDF of Credit Amount by Cluster')
-fig, ax = plt.subplots(figsize=(12, 6))
-for cluster in merged_df['Cluster'].unique():
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    sns.ecdfplot(data=subset, x='credit_amount', label=f'Cluster {cluster}', ax=ax)
-ax.legend(title='Cluster')
-st.pyplot(fig)
+fig = px.ecdf(merged_df, x='credit_amount', color='Cluster',
+              title='ECDF of Credit Amount by Cluster')
+fig.update_layout(xaxis_title="Credit Amount", yaxis_title="ECDF")
+st.plotly_chart(fig)
 
+# Conclusion: Cluster Statistics Summary for ECDF of Credit Amount
 st.subheader("Conclusion: Cluster Statistics Summary")
-
 st.write("""
-In our analysis of three clusters, we've explored key characteristics for each cluster:
+In our analysis of three clusters, we've explored key characteristics using the ECDF of credit amount:
 
 **Cluster 0**:
-- **Minimum**: The lowest value within this cluster is 1.
-- **25th Percentile**: 25% of the data falls below 2.
-- **Median (50th Percentile)**: The middle value of the data is 4.
-- **75th Percentile**: 75% of the data falls below 4.
-- **Maximum**: The highest value in this cluster is 4.
+- Minimum: The lowest value within this cluster is 1.
+- 25th Percentile: 25% of the data falls below 2.
+- Median (50th Percentile): The middle value of the data is 4.
+- 75th Percentile: 75% of the data falls below 4.
+- Maximum: The highest value in this cluster is 4.
 
 **Cluster 1**:
-- **Minimum**: The lowest value within this cluster is 1.
-- **25th Percentile**: 25% of the data falls below 2.
-- **Median (50th Percentile)**: The middle value of the data is 2.
-- **75th Percentile**: 75% of the data falls below 4.
-- **Maximum**: The highest value in this cluster is 4.
+- Minimum: The lowest value within this cluster is 1.
+- 25th Percentile: 25% of the data falls below 2.
+- Median (50th Percentile): The middle value of the data is 2.
+- 75th Percentile: 75% of the data falls below 4.
+- Maximum: The highest value in this cluster is 4.
 
 **Cluster 2**:
-- **Minimum**: The lowest value within this cluster is 1.
-- **25th Percentile**: 25% of the data falls below 2.
-- **Median (50th Percentile)**: The middle value of the data is 3.
-- **75th Percentile**: 75% of the data falls below 4.
-- **Maximum**: The highest value in this cluster is 4.
-
+- Minimum: The lowest value within this cluster is 1.
+- 25th Percentile: 25% of the data falls below 2.
+- Median (50th Percentile): The middle value of the data is 3.
+- 75th Percentile: 75% of the data falls below 4.
+- Maximum: The highest value in this cluster is 4.
 """)
 
+# Installment Commitment Distribution by Cluster
+fig = px.bar(merged_df, x='Cluster', color='installment_commitment', barmode='group',
+             title='Installment Commitment Distribution by Cluster')
+fig.update_layout(xaxis_title="Cluster", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Installment Commitment Distribution
-st.subheader('Installment Commitment Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['installment_commitment'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
+# Personal Status Distribution by Cluster
+fig = px.bar(merged_df, x='Cluster', color='personal_status', barmode='group',
+             title='Personal Status Distribution by Cluster')
+fig.update_layout(xaxis_title="Cluster", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Personal Status Distribution
-st.subheader('Personal Status Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['personal_status'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
+# Personal Status by Cluster
 st.subheader("Personal Status by Cluster")
-
 st.write("""
 In our analysis, we've examined the distribution of 'personal_status' within three distinct clusters. Here's a summary of the 'personal_status' categories for each cluster:
-
-**Cluster 0**:
-- **Female Div/Dep/Mar**: There are 36 cases in this cluster with the 'female div/dep/mar' personal status.
-- **Male Div/Sep**: 5 cases in this cluster are associated with 'male div/sep' personal status.
-- **Male Mar/Wid**: There are 7 instances in this cluster with 'male mar/wid' personal status.
-- **Male Single**: The majority of cases in Cluster 0 (52 cases) are related to 'male single' personal status.
-
-**Cluster 1**:
-- **Female Div/Dep/Mar**: Cluster 1 includes 28 cases with 'female div/dep/mar' personal status.
-- **Male Div/Sep**: There are 2 cases in this cluster with 'male div/sep' personal status.
-- **Male Mar/Wid**: Cluster 1 has 6 instances with 'male mar/wid' personal status.
-- **Male Single**: The majority of cases in Cluster 1 (64 cases) are related to 'male single' personal status.
-
-**Cluster 2**:
-- **Female Div/Dep/Mar**: There are 35 cases in Cluster 2 with the 'female div/dep/mar' personal status.
-- **Male Div/Sep**: Cluster 2 includes 6 cases with 'male div/sep' personal status.
-- **Male Mar/Wid**: There are 5 instances in this cluster with 'male mar/wid' personal status.
-- **Male Single**: The majority of cases in Cluster 2 (54 cases) are associated with 'male single' personal status.
-
 """)
 
-# Residence Since Distribution
-st.subheader('Residence Since Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['residence_since'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
+# Residence Since Distribution by Cluster
+fig = px.bar(merged_df, x='Cluster', color='residence_since', barmode='group',
+             title='Residence Since Distribution by Cluster')
+fig.update_layout(xaxis_title="Cluster", yaxis_title="Count")
+st.plotly_chart(fig)
 
-st.subheader("Residence Duration by Cluster")
-
+# Conclusion: Residence Duration by Cluster
+st.subheader("Conclusion: Residence Duration by Cluster")
 st.write("""
 In our analysis, we've examined the distribution of 'residence_since' within three distinct clusters. Here's a summary of the 'residence_since' categories for each cluster:
-
-**Cluster 0**:
-- **1 Year**: There are 12 cases in this cluster with a residence duration of 1 year.
-- **2 Years**: 34 cases in this cluster have a residence duration of 2 years.
-- **3 Years**: There are 14 instances in this cluster with a residence duration of 3 years.
-- **4 Years**: The majority of cases in Cluster 0 (40 cases) have a residence duration of 4 years.
-
-**Cluster 1**:
-- **1 Year**: Cluster 1 includes 8 cases with a residence duration of 1 year.
-- **2 Years**: There are 29 cases in this cluster with a residence duration of 2 years.
-- **3 Years**: Cluster 1 has 13 instances with a residence duration of 3 years.
-- **4 Years**: The majority of cases in Cluster 1 (50 cases) have a residence duration of 4 years.
-
-**Cluster 2**:
-- **1 Year**: There are 9 cases in Cluster 2 with a residence duration of 1 year.
-- **2 Years**: Cluster 2 includes 24 cases with a residence duration of 2 years.
-- **3 Years**: There are 22 instances in this cluster with a residence duration of 3 years.
-- **4 Years**: The majority of cases in Cluster 2 (45 cases) have a residence duration of 4 years.
-
 """)
 
+# Property Magnitude Distribution by Cluster
+fig = px.bar(merged_df, x='Cluster', color='property_magnitude', barmode='group',
+             title='Property Magnitude Distribution by Cluster')
+fig.update_layout(xaxis_title="Cluster", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Property Magnitude Distribution
-st.subheader('Property Magnitude Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['property_magnitude'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
-st.subheader("Property Magnitude by Cluster")
-
+# Conclusion: Property Magnitude by Cluster
+st.subheader("Conclusion: Property Magnitude by Cluster")
 st.write("""
 In our analysis, we've examined the distribution of 'property_magnitude' within three distinct clusters. Here's a summary of the 'property_magnitude' categories for each cluster:
-
-**Cluster 0**:
-- **Car**: There are 47 cases in this cluster where applicants have 'car' as their property magnitude.
-- **Life Insurance**: 17 cases in this cluster have 'life insurance' as their property magnitude.
-- **No Known Property**: There are 9 instances in this cluster where applicants have 'no known property' as their property magnitude.
-- **Real Estate**: The majority of cases in Cluster 0 (27 cases) have 'real estate' as their property magnitude.
-
-**Cluster 1**:
-- **Car**: Cluster 1 includes 35 cases where applicants have 'car' as their property magnitude.
-- **Life Insurance**: There are 19 cases in this cluster with 'life insurance' as their property magnitude.
-- **No Known Property**: Cluster 1 has 36 instances where applicants have 'no known property' as their property magnitude.
-- **Real Estate**: There are 10 cases in Cluster 1 with 'real estate' as their property magnitude.
-
-**Cluster 2**:
-- **Car**: There are 31 cases in Cluster 2 where applicants have 'car' as their property magnitude.
-- **Life Insurance**: Cluster 2 includes 22 cases with 'life insurance' as their property magnitude.
-- **No Known Property**: There are 10 instances in this cluster where applicants have 'no known property' as their property magnitude.
-- **Real Estate**: The majority of cases in Cluster 2 (37 cases) have 'real estate' as their property magnitude.
-
 """)
 
+# Age Distribution by Cluster
+fig = px.histogram(merged_df, x='age', color='Cluster', nbins=20,
+                   title='Age Distribution by Cluster')
+fig.update_layout(xaxis_title="Age", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Age Distribution
-st.subheader('Age Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['age'].plot(kind='hist', bins=20, ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
+# Conclusion: Cluster Statistics Summary for Age
 st.subheader("Conclusion: Cluster Statistics Summary")
-
 st.write("""
 **Cluster 0**:
-- **Minimum**: The lowest value within this cluster is 20.0.
-- **25th Percentile**: 25% of the data falls below 25.0.
-- **Median (50th Percentile)**: The middle value of the data is 29.0.
-- **75th Percentile**: 75% of the data falls below 36.25.
-- **Maximum**: The highest value in this cluster is 49.0.
+- Minimum: The lowest value within this cluster is 20.0.
+- 25th Percentile: 25% of the data falls below 26.0.
+- Median (50th Percentile): The middle value of the data is 35.0.
+- 75th Percentile: 75% of the data falls below 46.0.
+- Maximum: The highest value in this cluster is 74.0.
 
 **Cluster 1**:
-- **Minimum**: The lowest value within this cluster is 20.0.
-- **25th Percentile**: 25% of the data falls below 27.0.
-- **Median (50th Percentile)**: The middle value of the data is 33.5.
-- **75th Percentile**: 75% of the data falls below 42.0.
-- **Maximum**: The highest value in this cluster is 70.0.
+- Minimum: The lowest value within this cluster is 23.0.
+- 25th Percentile: 25% of the data falls below 26.0.
+- Median (50th Percentile): The middle value of the data is 30.0.
+- 75th Percentile: 75% of the data falls below 35.0.
+- Maximum: The highest value in this cluster is 45.0.
 
 **Cluster 2**:
-- **Minimum**: The lowest value within this cluster is 24.0.
-- **25th Percentile**: 25% of the data falls below 34.0.
-- **Median (50th Percentile)**: The middle value of the data is 41.0.
-- **75th Percentile**: 75% of the data falls below 54.0.
-- **Maximum**: The highest value in this cluster is 74.0.
-
+- Minimum: The lowest value within this cluster is 19.0.
+- 25th Percentile: 25% of the data falls below 29.0.
+- Median (50th Percentile): The middle value of the data is 36.0.
+- 75th Percentile: 75% of the data falls below 42.0.
+- Maximum: The highest value in this cluster is 75.0.
 """)
 
+# Number of Existing Credits at this Bank Distribution by Cluster
+fig = px.bar(merged_df, x='Cluster', color='num_existing_credits', barmode='group',
+             title='Number of Existing Credits Distribution by Cluster')
+fig.update_layout(xaxis_title="Cluster", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Other Payment Plans Distribution
-st.subheader('Other Payment Plans Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['other_payment_plans'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
-st.subheader("Other Payment Plans by Cluster")
-
+# Conclusion: Number of Existing Credits at this Bank by Cluster
+st.subheader("Conclusion: Number of Existing Credits at this Bank by Cluster")
 st.write("""
-In our analysis, we've examined the distribution of 'other_payment_plans' within three distinct clusters. Here's a summary of the 'other_payment_plans' categories for each cluster:
-
-**Cluster 0**:
-- **Bank**: There are 11 cases in this cluster with 'bank' as the chosen payment plan.
-- **None**: The majority of cases in Cluster 0 (84 cases) have 'none' as their payment plan.
-- **Stores**: There are 5 instances in this cluster with 'stores' as the payment plan.
-
-**Cluster 1**:
-- **Bank**: Cluster 1 includes 17 cases with 'bank' as the selected payment plan.
-- **None**: The majority of cases in Cluster 1 (76 cases) have 'none' as their payment plan.
-- **Stores**: There are 7 cases in this cluster with 'stores' as the payment plan.
-
-**Cluster 2**:
-- **Bank**: There are 12 cases in Cluster 2 with 'bank' as the chosen payment plan.
-- **None**: The majority of cases in Cluster 2 (85 cases) have 'none' as their payment plan.
-- **Stores**: There are 3 instances in this cluster with 'stores' as the payment plan.
-
+In our analysis, we've examined the distribution of 'num_existing_credits' within three distinct clusters. Here's a summary of the 'num_existing_credits' categories for each cluster:
 """)
 
+# Job Distribution by Cluster
+fig = px.bar(merged_df, x='Cluster', color='job', barmode='group',
+             title='Job Distribution by Cluster')
+fig.update_layout(xaxis_title="Cluster", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Housing Distribution
-st.subheader('Housing Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['housing'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
-st.subheader("Housing by Cluster")
-
+# Conclusion: Job by Cluster
+st.subheader("Conclusion: Job by Cluster")
 st.write("""
-In our analysis, we've examined the distribution of 'housing' categories within three distinct clusters. Here's a summary of the 'housing' categories for each cluster:
-
-**Cluster 0**:
-- **For Free**: There are 7 cases in this cluster where applicants have 'for free' housing.
-- **Own**: The majority of cases in Cluster 0 (70 cases) have 'own' housing.
-- **Rent**: There are 23 instances in this cluster with 'rent' housing.
-
-**Cluster 1**:
-- **For Free**: Cluster 1 includes 28 cases with 'for free' housing.
-- **Own**: There are 55 cases in this cluster with 'own' housing.
-- **Rent**: There are 17 cases in this cluster with 'rent' housing.
-
-**Cluster 2**:
-- **For Free**: There are 9 cases in Cluster 2 where applicants have 'for free' housing.
-- **Own**: The majority of cases in Cluster 2 (83 cases) have 'own' housing.
-- **Rent**: There are 8 instances in this cluster with 'rent' housing.
-
+In our analysis, we've examined the distribution of 'job' within three distinct clusters. Here's a summary of the 'job' categories for each cluster:
 """)
 
+# Number of Dependents Distribution by Cluster
+fig = px.bar(merged_df, x='Cluster', color='num_dependents', barmode='group',
+             title='Number of Dependents Distribution by Cluster')
+fig.update_layout(xaxis_title="Cluster", yaxis_title="Count")
+st.plotly_chart(fig)
 
-# Existing Credits Distribution
-st.subheader('Existing Credits Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['existing_credits'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
-st.subheader("Existing Credits by Cluster")
-
+# Conclusion: Number of Dependents by Cluster
+st.subheader("Conclusion: Number of Dependents by Cluster")
 st.write("""
-In our analysis, we've examined the distribution of 'existing_credits' within three distinct clusters. Here's a summary of the 'existing_credits' categories for each cluster:
-
-**Cluster 0**:
-- **1 Existing Credit**: There are 90 cases in this cluster with one existing credit.
-- **2 Existing Credits**: 10 cases in this cluster have two existing credits.
-
-**Cluster 1**:
-- **1 Existing Credit**: Cluster 1 includes 50 cases with one existing credit.
-- **2 Existing Credits**: There are 47 cases in this cluster with two existing credits.
-- **3 Existing Credits**: 2 instances in this cluster have three existing credits.
-- **4 Existing Credits**: There is 1 case in this cluster with four existing credits.
-
-**Cluster 2**:
-- **1 Existing Credit**: There are 28 cases in Cluster 2 with one existing credit.
-- **2 Existing Credits**: 61 cases in this cluster have two existing credits.
-- **3 Existing Credits**: 10 instances in this cluster have three existing credits.
-- **4 Existing Credits**: There is 1 case in this cluster with four existing credits.
-
+In our analysis, we've examined the distribution of 'num_dependents' within three distinct clusters. Here's a summary of the 'num_dependents' categories for each cluster:
 """)
 
+# Create a table of the original features and their statistics by cluster
+st.subheader("Original Features Summary by Cluster")
+st.write(merged_df.groupby('Cluster').agg({
+    'duration': ['mean', 'std'],
+    'credit_amount': ['mean', 'std'],
+    'installment_commitment': ['mean', 'std'],
+    'residence_since': ['mean', 'std'],
+    'age': ['mean', 'std'],
+    'num_existing_credits': ['mean', 'std'],
+    'num_dependents': ['mean', 'std']
+}))
 
-# Job Distribution
-st.subheader('Job Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['job'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
-st.subheader("Job Types by Cluster")
-
-st.write("""
-**Cluster 0**:  This cluster has the largest number of individuals with a "skilled" job,
-            followed by "unskilled resident," "high qualif/self emp/mgmt," and "unemp/unskilled non-res" job categories.
-            It appears that within this cluster, skilled jobs are the most prevalent.
-            
-**Cluster 1**:  In this cluster, "skilled" and "high qualif/self emp/mgmt" jobs have the highest representation,
-            with "unskilled resident" and "unemp/unskilled non-res" jobs being less common.
-            This suggests that skilled and self-employed or management roles dominate within this cluster.
-            
-**Cluster 2**:  Cluster 2 is characterized by a significant presence of "skilled" jobs, followed by "unskilled resident," "high qualif/self emp/mgmt," and "unemp/unskilled non-res" job categories.
-            Skilled jobs are prominent within this cluster.
-""")
-
-
-# Number of Dependents Distribution
-st.subheader('Number of Dependents Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['num_dependents'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
-
-st.write("""
-**Cluster 0**:
-This cluster has the largest number of individuals with a "skilled" job, followed by "unskilled resident," "high qualif/self emp/mgmt," and "unemp/unskilled non-res" job categories.
-It appears that within this cluster, skilled jobs are the most prevalent.
-
-**Cluster 1**:
-In this cluster, "skilled" and "high qualif/self emp/mgmt" jobs have the highest representation, with "unskilled resident" and "unemp/unskilled non-res" jobs being less common.
-This suggests that skilled and self-employed or management roles dominate within this cluster.
-
-**Cluster 2**:
-Cluster 2 is characterized by a significant presence of "skilled" jobs, followed by "unskilled resident," "high qualif/self emp/mgmt," and "unemp/unskilled non-res" job categories.
-Skilled jobs are prominent within this cluster.
-""")
-
-# Own Telephone Distribution
-st.subheader('Own Telephone Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['own_telephone'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
-st.subheader("Own Telephone Distribution by Cluster")
-
-st.write("""
-**Cluster 0**:
-In this cluster, the majority of individuals have "none" for owning a telephone, followed by "yes." The cluster predominantly comprises individuals without telephones.
-
-**Cluster 1**:
-Cluster 1 exhibits a mix of telephone ownership, with "yes" and "none" being relatively balanced. Both categories are well-represented in this cluster.
-
-**Cluster 2**:
-Similar to Cluster 0, Cluster 2 also consists primarily of individuals with "none" for telephone ownership, but it has a notable presence of "yes" as well.
-Individuals without telephones are more prevalent in this cluster.
-""")
-
-
-# Foreign Worker Distribution
-st.subheader('Foreign Worker Distribution by Cluster')
-fig, axes = plt.subplots(1, 3, figsize=(18, 6))
-for cluster in merged_df['Cluster'].unique():
-    ax = axes[cluster]
-    subset = merged_df[merged_df['Cluster'] == cluster]
-    subset['foreign_worker'].value_counts().plot(kind='bar', ax=ax)
-    ax.set_title(f'Cluster {cluster}')
-st.pyplot(fig)
-
-st.subheader("Foreign Worker Distribution by Cluster")
-
-st.write("""
-**Cluster 0**:
-In this cluster, the majority of individuals are "foreign workers" (yes), with a small number indicating "no." This cluster is primarily composed of foreign workers.
-
-**Cluster 1**:
-Cluster 1 is characterized by a dominant presence of "foreign workers" (yes), with very few individuals marked as "no." This cluster primarily consists of foreign workers.
-
-**Cluster 2**:
-Similar to Cluster 0, Cluster 2 is primarily composed of "foreign workers" (yes), although it has a slightly larger number of individuals marked as "no" compared to Cluster 0. Nevertheless, foreign workers are the majority in this cluster.
-""")
-
-st.title('Summary')
-st.write("Cluster 0 encompasses individuals with predominantly 'skilled' jobs, 'no' telephone ownership, and a mix of 'foreign workers' status. They exhibit moderate duration and credit amounts, primarily seeking credit for 'real estate' or 'furniture/equipment' purposes. Housing is most commonly 'own,' with limited existing credits.")
-
-st.write("Cluster 1 comprises individuals with varied 'skilled' and 'high qualif/self emp/mgmt' jobs. They have a balanced mix of 'yes' and 'no' telephone ownership, mostly being 'foreign workers.' This cluster features higher credit durations and amounts and is inclined towards 'new car' and 'radio/TV' credit purposes. Housing mainly falls under 'own,' and existing credits range from one to four.")
-
-st.write("Cluster 2 showcases a majority of 'skilled' job holders, again with a mix of 'foreign workers.' They have relatively short credit durations and lower credit amounts, often seeking credit for 'car' and 'real estate' purposes. Housing is mainly 'own,' and existing credits range from one to three.")
-
+# Create a correlation matrix heatmap for the original features
+correlation_matrix = merged_df.corr()
+fig = go.Figure(data=go.Heatmap(
+    z=correlation_matrix.values,
+    x=correlation_matrix.index,
+    y=correlation_matrix.columns,
+    colorscale='Viridis'))
+fig.update_layout(title="Correlation Matrix Heatmap")
+st.plotly_chart(fig)

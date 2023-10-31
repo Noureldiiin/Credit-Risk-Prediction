@@ -634,3 +634,20 @@ st.write("Cluster 1 comprises individuals with varied 'skilled' and 'high qualif
 
 st.write("Cluster 2 showcases a majority of 'skilled' job holders, again with a mix of 'foreign workers.' They have relatively short credit durations and lower credit amounts, often seeking credit for 'car' and 'real estate' purposes. Housing is mainly 'own,' and existing credits range from one to three.")
 
+cluster_info = {
+    "Cluster 0": "Low Risk",
+    "Cluster 1": "Medium Risk",
+    "Cluster 2": "High Risk"
+}
+
+st.title("Customer Risk Clusters")
+
+# Display the risk clusters
+st.write("Risk Cluster Information:")
+for cluster, risk_level in cluster_info.items():
+    st.write(f"{cluster}: {risk_level}")
+
+# Conclusion
+st.write("In summary, our analysis has categorized our customer base into three distinct risk clusters.")
+st.write("This segmentation will guide our decision-making processes, enabling us to offer tailored solutions and manage financial risk effectively.")
+st.write("We are committed to optimizing our services to meet the unique needs of each cluster, ensuring both customer satisfaction and financial stability.")

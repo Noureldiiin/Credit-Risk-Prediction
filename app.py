@@ -136,7 +136,6 @@ Cluster 2: Cluster 2 follows a similar pattern with the same 4 'checking_status'
 """
 
 # Streamlit app
-st.title("Checking Account Details")
 st.write(display_string)
 
 # Display Employment Distribution

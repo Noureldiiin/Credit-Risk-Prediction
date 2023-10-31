@@ -108,7 +108,7 @@ fig, ax = plt.subplots()
 df['foreign_worker'].value_counts().plot(kind='bar')
 st.pyplot(fig)
 
-
+st.title("Cluster Statistics Summary")
 
 # Create and display the plots
 st.subheader('Checking Account Status Distribution by Cluster')
@@ -172,35 +172,38 @@ for cluster in merged_df['Cluster'].unique():
 st.pyplot(fig)
 
 
-st.subheader("Cluster Statistics Summary")
+
 
 st.write("""
 **Cluster 0:**
-- Mean: The average value within this cluster is approximately 20.92.
-- Standard Deviation: The data points have a spread of around 10.05 from the mean.
-- Minimum: The smallest value in this cluster is 4.0.
-- 25th Percentile: 25% of the data falls below 12.0.
-- Median (50th Percentile): The middle value of the data is 18.0.
-- 75th Percentile: 75% of the data falls below 24.0.
-- Maximum: The largest value in this cluster is 48.0.
+The average value in this cluster is approximately 20.92.
+The data points have a spread of around 10.05.
+The smallest value in this cluster is 4.0.
+About 25% of the data falls below 12.0.
+The middle value of the data is 18.0.
+About 75% of the data falls below 24.0.
+The largest value in this cluster is 48.0.
+
 
 **Cluster 1:**
-- Mean: The average value within this cluster is approximately 36.15.
-- Standard Deviation: The data points have a spread of around 13.38 from the mean.
-- Minimum: The smallest value in this cluster is 6.0.
-- 25th Percentile: 25% of the data falls below 24.0.
-- Median (50th Percentile): The middle value of the data is 36.0.
-- 75th Percentile: 75% of the data falls below 48.0.
-- Maximum: The largest value in this cluster is 60.0.
+The average value in this cluster is approximately 36.15.
+The data points have a spread of around 13.38.
+The smallest value in this cluster is 6.0.
+About 25% of the data falls below 24.0.
+The middle value of the data is 36.0.
+About 75% of the data falls below 48.0.
+The largest value in this cluster is 60.0.
+
 
 **Cluster 2:**
-- Mean: The average value within this cluster is approximately 15.14.
-- Standard Deviation: The data points have a spread of around 6.96 from the mean.
-- Minimum: The smallest value in this cluster is 4.0.
-- 25th Percentile: 25% of the data falls below 11.0.
-- Median (50th Percentile): The middle value of the data is 12.0.
-- 75th Percentile: 75% of the data falls below 21.0.
-- Maximum: The largest value in this cluster is 36.0.
+The average value in this cluster is approximately 15.14.
+The data points have a spread of around 6.96.
+The smallest value in this cluster is 4.0.
+About 25% of the data falls below 11.0.
+The middle value of the data is 12.0.
+About 75% of the data falls below 21.0.
+The largest value in this cluster is 36.0.
+
 """)
 
 
@@ -240,7 +243,6 @@ In this analysis, we have explored the distribution of 'credit_history' within t
 - **'existing paid'**: 16 cases in Cluster 2 have an 'existing paid' credit history, suggesting successful credit repayment.
 - **'no credits/all paid'**: There are 3 instances in Cluster 2 where applicants either have no prior credit history or have a history of 'all paid.'
 
-This detailed breakdown of 'credit_history' by cluster provides a comprehensive understanding of how different clusters are associated with distinct patterns of credit history. Such insights are valuable for making data-driven decisions and conducting further analysis related to credit and finance.
 """)
 
 
@@ -290,7 +292,6 @@ In this analysis, we have explored the distribution of credit purposes within th
 - **Retraining**: There is 1 case indicating credit requests for retraining.
 - **Used Car**: 3 cases reflect a desire to purchase a used car.
 
-This detailed breakdown of credit purposes by cluster provides a comprehensive understanding of the diverse reasons applicants seek credit. Such insights can be valuable for making informed decisions and conducting further analysis related to credit and financial decision-making.
 """)
 
 
@@ -330,7 +331,6 @@ In our analysis of three clusters, we've examined important characteristics for 
 - **75th Percentile**: 75% of the data falls below 2,336.5.
 - **Maximum**: The highest value in this cluster is 4,591.0.
 
-These statistics help us understand the range and distribution of data within each cluster, providing valuable insights for various analyses and decision-making processes.
 """)
 
 
@@ -369,7 +369,6 @@ In our analysis of three clusters, we've explored key characteristics for each c
 - **75th Percentile**: 75% of the data falls below 4.
 - **Maximum**: The highest value in this cluster is 4.
 
-These statistics help us understand the range and distribution of data within each cluster, providing valuable insights for various analyses and decision-making processes.
 """)
 
 
@@ -416,7 +415,6 @@ In our analysis, we've examined the distribution of 'personal_status' within thr
 - **Male Mar/Wid**: There are 5 instances in this cluster with 'male mar/wid' personal status.
 - **Male Single**: The majority of cases in Cluster 2 (54 cases) are associated with 'male single' personal status.
 
-This summary provides insights into the distribution of 'personal_status' categories within each cluster, helping us understand the characteristics of applicants in different personal status categories within the context of credit analysis.
 """)
 
 # Residence Since Distribution
@@ -452,7 +450,6 @@ In our analysis, we've examined the distribution of 'residence_since' within thr
 - **3 Years**: There are 22 instances in this cluster with a residence duration of 3 years.
 - **4 Years**: The majority of cases in Cluster 2 (45 cases) have a residence duration of 4 years.
 
-This summary provides insights into the distribution of 'residence_since' categories within each cluster, helping us understand the duration of residence for applicants in different clusters in the context of credit analysis.
 """)
 
 
@@ -489,7 +486,6 @@ In our analysis, we've examined the distribution of 'property_magnitude' within 
 - **No Known Property**: There are 10 instances in this cluster where applicants have 'no known property' as their property magnitude.
 - **Real Estate**: The majority of cases in Cluster 2 (37 cases) have 'real estate' as their property magnitude.
 
-This summary provides insights into the distribution of 'property_magnitude' categories within each cluster, helping us understand the different property magnitudes associated with applicants in various clusters in the context of credit analysis.
 """)
 
 
@@ -506,8 +502,6 @@ st.pyplot(fig)
 st.subheader("Conclusion: Cluster Statistics Summary")
 
 st.write("""
-In our analysis of three clusters, we've examined the following key statistics for each cluster:
-
 **Cluster 0**:
 - **Minimum**: The lowest value within this cluster is 20.0.
 - **25th Percentile**: 25% of the data falls below 25.0.
@@ -529,7 +523,6 @@ In our analysis of three clusters, we've examined the following key statistics f
 - **75th Percentile**: 75% of the data falls below 54.0.
 - **Maximum**: The highest value in this cluster is 74.0.
 
-These statistics provide insights into the range and distribution of data within each cluster, offering valuable information for various analyses and decision-making processes.
 """)
 
 
@@ -563,7 +556,6 @@ In our analysis, we've examined the distribution of 'other_payment_plans' within
 - **None**: The majority of cases in Cluster 2 (85 cases) have 'none' as their payment plan.
 - **Stores**: There are 3 instances in this cluster with 'stores' as the payment plan.
 
-This summary provides insights into the distribution of 'other_payment_plans' categories within each cluster, helping us understand the various payment plans chosen by applicants in different clusters in the context of credit analysis.
 """)
 
 
@@ -597,7 +589,6 @@ In our analysis, we've examined the distribution of 'housing' categories within 
 - **Own**: The majority of cases in Cluster 2 (83 cases) have 'own' housing.
 - **Rent**: There are 8 instances in this cluster with 'rent' housing.
 
-This summary provides insights into the distribution of 'housing' categories within each cluster, helping us understand the different housing situations of applicants in various clusters in the context of credit analysis.
 """)
 
 
@@ -733,4 +724,11 @@ Cluster 1 is characterized by a dominant presence of "foreign workers" (yes), wi
 **Cluster 2**:
 Similar to Cluster 0, Cluster 2 is primarily composed of "foreign workers" (yes), although it has a slightly larger number of individuals marked as "no" compared to Cluster 0. Nevertheless, foreign workers are the majority in this cluster.
 """)
+
+st.title('Summary')
+st.write("Cluster 0 encompasses individuals with predominantly 'skilled' jobs, 'no' telephone ownership, and a mix of 'foreign workers' status. They exhibit moderate duration and credit amounts, primarily seeking credit for 'real estate' or 'furniture/equipment' purposes. Housing is most commonly 'own,' with limited existing credits.")
+
+st.write("Cluster 1 comprises individuals with varied 'skilled' and 'high qualif/self emp/mgmt' jobs. They have a balanced mix of 'yes' and 'no' telephone ownership, mostly being 'foreign workers.' This cluster features higher credit durations and amounts and is inclined towards 'new car' and 'radio/TV' credit purposes. Housing mainly falls under 'own,' and existing credits range from one to four.")
+
+st.write("Cluster 2 showcases a majority of 'skilled' job holders, again with a mix of 'foreign workers.' They have relatively short credit durations and lower credit amounts, often seeking credit for 'car' and 'real estate' purposes. Housing is mainly 'own,' and existing credits range from one to three.")
 
